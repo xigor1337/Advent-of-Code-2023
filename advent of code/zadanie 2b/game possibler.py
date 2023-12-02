@@ -18,8 +18,6 @@ for line in values:
     line.pop()
     #print("games:", games)
     #print("line:", line)
-    #games to lista z grami
-    #line to lista z numerem gry
 
     red_count = 0
     green_count = 0
