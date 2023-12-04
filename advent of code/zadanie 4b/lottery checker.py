@@ -1,3 +1,5 @@
+#not finished
+
 with open("input values.txt", 'r') as file:
     lines = [file.readline().strip() for _ in range(196)]
 suma = 0
