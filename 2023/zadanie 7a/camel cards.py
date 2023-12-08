@@ -55,28 +55,47 @@ print(len(one_pair), "one_pair:", one_pair)
 print(len(high_card), "high_card:", high_card)
 
 types = [five_of_a_kind, four_of_a_kind, full_house, three_of_a_kind, two_pair, one_pair, high_card]
-worth = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
-worth = {"A": 13,
-         "K": 12,
-         "Q": 11,
-         "J": 10,
-         "T": 9,
-         "9": 8,
-         "8": 7,
-         "7": 6,
-         "6": 5,
-         "5": 4,
-         "4": 3,
-         "3": 2,
-         "2":1}
+worth1 = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+worth2 = {"A": 13, "K": 12, "Q": 11, "J": 10, "T": 9, "9": 8, "8": 7, "7": 6, "6": 5, "5": 4, "4": 3, "3": 2, "2":1}
 
 print(len(types), "types", types)
-#jestem zmęczony ale można tu zrobić by sprawdzał kolejnościowo
+
 for type in types:
-    for i in range(len(type)):
-        score = 0
-        for j in range(i + 1, len(type)):
-            for index in range(5):
-                if worth[type[i][index]] < worth[type[j][index]]:
-                    type[i], type[j] = type[j], type[i]
-                    break
+    for _ in range(len(type)):
+        for i in range(len(type) - 1):
+            if type[i][0] != type[i + 1][0]:
+                if worth2[type[i][0]] < worth2[type[i + 1][0]]:
+                    type[i], type[i + 1] = type[i + 1], type[i]
+            elif type[i][1] != type[i + 1][1]:
+                if worth2[type[i][1]] < worth2[type[i + 1][1]]:
+                    type[i], type[i + 1] = type[i + 1], type[i]
+            elif type[i][2] != type[i + 1][2]:
+                if worth2[type[i][2]] < worth2[type[i + 1][2]]:
+                    type[i], type[i + 1] = type[i + 1], type[i]
+            elif type[i][3] != type[i + 1][3]:
+                if worth2[type[i][3]] < worth2[type[i + 1][3]]:
+                    type[i], type[i + 1] = type[i + 1], type[i]
+            elif type[i][4] != type[i + 1][4]:
+                if worth2[type[i][4]] < worth2[type[i + 1][4]]:
+                    type[i], type[i + 1] = type[i + 1], type[i]
+            else:
+                pass
+
+print("sorted types", types)
+
+multiplication = {}
+for m in range(1000, 0, -1):
+    multiplication[m] = 0
+print(multiplication)
+
+m = 1000
+for type in types:
+    for i in type:
+        multiplication[m] = i.split(" ")[1]
+        m -= 1
+print(multiplication)
+
+suma = 0
+for i in multiplication:
+    suma += int(i) * int(multiplication[i])
+print(suma)
