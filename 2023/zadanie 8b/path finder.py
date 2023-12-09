@@ -1,3 +1,4 @@
+from math import lcm
 with open("input values.txt", 'r') as file:
     lines = [file.readline().strip() for _ in range(776)]
 instructions = lines[0]
@@ -17,26 +18,25 @@ for i in path:
         droga.append(i)
 print(droga)
 
-#iteration for 1000 years
-while True:
-    check = index
-    for j in droga:
+sumy = []
+for i in droga:
+    suma = 0
+    index = 0
+    current = i
+    while current[-1] != "Z":
+        if index == len(instructions):
+            index = 0
+        check = index
         for i in path:
             if index == len(instructions):
                 index = 0
-            if j == i:
+            if current == i:
                 if instructions[index] == "L" and index == check:
-                    droga[droga.index(j)] = path[i][0]
+                    current = path[i][0]
+                    index += 1
                 elif instructions[index] == "R" and index == check:
-                    droga[droga.index(j)] = path[i][1]
-    index += 1
-    suma += 1
-    udane = 0
-    for i in droga:
-        if i[-1] == "Z":
-            udane += 1
-    print(udane, droga)
-    if udane == len(droga):
-        break
-print(droga)
-print(suma)
+                    current = path[i][1]
+                    index += 1
+        suma += 1
+    sumy.append(suma)
+print(lcm(*sumy))
