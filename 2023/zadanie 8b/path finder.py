@@ -3,8 +3,6 @@ with open("input values.txt", 'r') as file:
 instructions = lines[0]
 print(len(instructions), "instructions:", instructions)
 
-#nothing has changed yet
-
 path = {}
 for i in lines[2:]:
     path[i.split(" ")[0]] = i.split(" ")[2][1:4], i.split(" ")[3][:3]
