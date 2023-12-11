@@ -27,13 +27,6 @@ for i in grid:
 #. is ground; there is no pipe in this tile.
 #S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
 
-possibilities = {"|": "1",
-                 "-": "1",
-                 "L": "1",
-                 "J": "1",
-                 "7": "1",
-                 "F": "1",}
-
 current_index = s_index
 current_line = s_line - 1
 check = [current_index - 1, current_index + 1, current_line + 1, current_line - 1]
