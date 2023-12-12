@@ -1,73 +1,68 @@
-import math
+"""
+| is a vertical pipe connecting north and south.
+- is a horizontal pipe connecting east and west.
+L is a 90-degree bend connecting north and east.
+J is a 90-degree bend connecting north and west.
+7 is a 90-degree bend connecting south and west.
+F is a 90-degree bend connecting south and east.
+. is ground; there is no pipe in this tile.
+S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
+"""
 
-#for some reason somethimes it gose backwords, no idea why
-
-with open("input values.txt", 'r') as file:
+with open("input values.txt", "r") as file:
     lines = [line.strip() for line in file.readlines()]
 
-for line in lines:
-    for i in line:
-        if i == "S":
-            s_line = lines.index(line)
-            s_index = line.index(i)
-print("location of S: line =", s_line, "index =", s_index)
 
-grid = []
-for i in range(len(lines)):
-    grid.append([lines[i]])
-for i in grid:
-    print(i)
+def get_start(map):
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == "S":
+                return (i, j)
 
-#| is a vertical pipe connecting north and south.
-#- is a horizontal pipe connecting east and west.
-#L is a 90-degree bend connecting north and east.
-#J is a 90-degree bend connecting north and west.
-#7 is a 90-degree bend connecting south and west.
-#F is a 90-degree bend connecting south and east.
-#. is ground; there is no pipe in this tile.
-#S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
+    return (0, 0)
 
-current_index = s_index
-current_line = s_line - 1
-check = [current_index - 1, current_index + 1, current_line + 1, current_line - 1]
-aaa = 0
-suma = 0
-last = ""
-p = set()
-ilosc = -1
-while current_index != s_index or current_line != s_line:
-    print("   " + lines[current_line - 1][current_index] + "\n", lines[current_line][current_index - 1], lines[current_line][current_index], lines[current_line][current_index + 1] + "\n", "  " + lines[current_line + 1][current_index ])
-    check = [current_index - 1, current_index + 1, current_line + 1, current_line - 1, ""]
-    check.remove(last)
-    for e in check:
-        if e == current_index + 1 and lines[current_line][current_index] != "|" and lines[current_line][current_index] != "7" and lines[current_line][current_index] != "J":
-            if lines[current_line][current_index + 1] == "-" or lines[current_line][current_index + 1] == "J" or lines[current_line][current_index + 1] == "7":
-                current_index += 1
-                last = current_index - 1
-                break
-        if e == current_index - 1 and lines[current_line][current_index] != "|" and lines[current_line][current_index] != "L" and lines[current_line][current_index] != "F":
-            if lines[current_line][current_index - 1] == "-" or lines[current_line][current_index - 1] == "L" or lines[current_line][current_index - 1] == "F":
-                current_index -= 1
-                last = current_index + 1
-                break
-        if e == current_line - 1 and lines[current_line][current_index] != "F" and lines[current_line][current_index] != "7" and lines[current_line][current_index] != "-":
-            if lines[current_line - 1][current_index] == "|" or lines[current_line - 1][current_index] == "7" or lines[current_line - 1][current_index] == "F":
-                current_line -= 1
-                last = current_line + 1
-                break
-        if e == current_line + 1 and lines[current_line][current_index] != "L" and lines[current_line][current_index] != "J" and lines[current_line][current_index] != "-":
-            if lines[current_line + 1][current_index] == "|" or lines[current_line + 1][current_index] == "J" or lines[current_line + 1][current_index] == "L":
-                current_line += 1
-                last = current_line - 1
-                break
-    print("\nlocation of ", lines[current_line][current_index], ": line =", current_line, "index =", current_index)
+
+s_pos = get_start(lines)
+current, last = None, s_pos
+
+# Get next element after start
+for d in [-1, 1]:
+    y = s_pos[0] + d
+    x = s_pos[1] + d
+
+    if y < 0 or y > len(lines) or x < 0 or x > len(lines[0]):
+        continue
+
+    if lines[y][s_pos[1]] in ["|", "L", "J", "7", "F"]:  # TOP/BOTTOM
+        current = (y, s_pos[1])
+        break
+
+    if lines[s_pos[0]][x] in ["-", "L", "J", "7", "F"]:  # LEFT/RIGHT
+        current = (s_pos[0], x)
+        break
+
+suma = 1
+
+# Run through loop
+while current != s_pos:
+    row, col = current
+    item = lines[row][col]
+
+    top, bottom = (row - 1, col), (row + 1, col)
+    left, right = (row, col - 1), (row, col + 1)
+
+    if item in ["|", "L", "J"] and row > 0 and lines[top[0]][top[1]] != "." and top != last:  # TOP
+        current, last = top, current
+
+    elif item in ["|", "F", "7"] and row < len(lines) and lines[bottom[0]][bottom[1]] != "." and bottom != last:  # BOTTOM
+        current, last = bottom, current
+
+    elif item in ["-", "7", "J"] and col > 0 and lines[left[0]][left[1]] != "." and left != last:  # LEFT
+        current, last = left, current
+
+    elif item in ["-", "F", "L"] and col < len(lines[0]) and lines[right[0]][right[1]] != "." and right != last:  # RIGHT
+        current, last = right, current
+
     suma += 1
-    p.add(str(current_line) + " " + str(current_index))
-    ilosc += 1
-    if ilosc == len(p):
-        aaa += 1
-        if aaa == 1:
-            print("blocked")
-            break
-print(suma)
-print(math.sqrt(suma))
+
+print(suma // 2)
